@@ -1,0 +1,59 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath("com.bmuschko:gradle-docker-plugin:9.3.4")
+    }
+}
+
+plugins {
+    id 'java'
+    id 'idea'
+    id 'io.spring.dependency-management' version "1.1.3"
+    id 'org.springframework.boot' version '3.1.2'
+    id 'com.bmuschko.docker-spring-boot-application' version '9.3.4'
+}
+
+import com.bmuschko.gradle.docker.tasks.image.*
+import com.bmuschko.gradle.docker.tasks.container.*
+
+group = 'ilyxa.orders'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-json'
+    implementation 'org.springframework.kafka:spring-kafka:'
+    implementation "com.github.javafaker:javafaker:1.0.2"
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor("org.projectlombok:lombok")
+}
+
+
+docker {
+    springBootApplication {
+        baseImage = 'openjdk:19-alpine'
+        ports = [9090, 8080]
+        images = ['ik-nas:5000/retailorders']
+        jvmArgs = ['-Dspring.profiles.active=production', '-Xmx1024m']
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

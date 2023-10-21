@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helloworld-deployment
+  labels:
+    app: helloworld
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: helloworld
+  template:
+    metadata:
+      labels:
+        app: helloworld
+    spec:
+      containers:
+      - name: helloworld
+        image: d4software/querytree:latest
+        ports:
+        - containerPort: 80
+      # imagePullSecrets:
+      # - name: regcred
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: helloworld
+  labels:
+    app: helloworld
+spec:
+  type: LoadBalancer
+  selector:
+    app: helloworld
+  ports:
+    - name: http
+      targetPort: 80
+      port: 80

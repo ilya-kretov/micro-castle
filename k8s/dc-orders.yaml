@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dc-orders-deployment
+  labels:
+    app: dc-orders
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dc-orders
+  template:
+    metadata:
+      labels:
+        app: dc-orders
+    spec:
+      containers:
+      - name: dc-orders
+        image: ik-nas:5000/dcorders
+        ports:
+        - containerPort: 8080
+      # imagePullSecrets:
+      # - name: regcred
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: dc-orders
+  labels:
+    app: dc-orders
+spec:
+  type: LoadBalancer
+  selector:
+    app: dc-orders
+  ports:
+    - name: http
+      targetPort: 8080
+      port: 8080

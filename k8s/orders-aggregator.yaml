@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-aggregator-deployment
+  labels:
+    app: orders-aggregator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orders-aggregator
+  template:
+    metadata:
+      labels:
+        app: orders-aggregator
+    spec:
+      containers:
+      - name: orders-aggregator
+        image: ik-nas:5000/ordersaggregator
+        ports:
+        - containerPort: 8080
+      # imagePullSecrets:
+      # - name: regcred
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: orders-aggregator
+  labels:
+    app: orders-aggregator
+spec:
+  type: LoadBalancer
+  selector:
+    app: orders-aggregator
+  ports:
+    - name: http
+      targetPort: 8080
+      port: 8080

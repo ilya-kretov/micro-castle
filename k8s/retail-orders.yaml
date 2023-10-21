@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: retail-orders-deployment
+  labels:
+    app: retail-orders
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: retail-orders
+  template:
+    metadata:
+      labels:
+        app: retail-orders
+    spec:
+      containers:
+      - name: retail-orders
+        image: ik-nas:5000/retailorders
+        ports:
+        - containerPort: 8080
+      # imagePullSecrets:
+      # - name: regcred
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: retail-orders
+  labels:
+    app: retail-orders
+spec:
+  type: LoadBalancer
+  selector:
+    app: retail-orders
+  ports:
+    - name: http
+      targetPort: 8080
+      port: 8080

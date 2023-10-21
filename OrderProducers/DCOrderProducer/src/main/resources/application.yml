@@ -1,0 +1,14 @@
+spring:
+  kafka:
+    consumer:
+      group-id: orders-aggregators
+      auto-offset-reset: earliest
+    # change this property if you are using your own
+    # Kafka cluster or your Docker IP is different
+    bootstrap-servers: kafka:29092
+#    bootstrap-servers: kafka:9092
+
+order-producer:
+  new-order-topic-name: new-order-topic
+  messages-per-request: 10
+  aggregator-host: orders-aggregator
