@@ -1,0 +1,2 @@
+order-producer:
+  new-order-topic-name: test-topic

@@ -1,2 +1,4 @@
 rootProject.name = 'DCOrderProducer'
 
+include(":Models")
+project(":Models").projectDir = file("../Models")

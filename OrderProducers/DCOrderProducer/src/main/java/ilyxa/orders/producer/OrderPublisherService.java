@@ -1,15 +1,14 @@
 package ilyxa.orders.producer;
 
 import com.github.javafaker.Faker;
-import ilyxa.orders.producer.model.Order;
-import ilyxa.orders.producer.model.OrderItem;
+import ilyxa.orders.model.Order;
+import ilyxa.orders.model.OrderItem;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -39,11 +38,7 @@ public class OrderPublisherService {
         this.topicName = value;
     }
 
-    @Value("${order-producer.aggregator-host}")
-    private String aggregatorHost;
-
-    @Autowired
-    private RestTemplate restTemplate;
+    private long id = 1;
 
     @Scheduled(fixedRate = 2000L)
     public void generateOrder() {
@@ -53,7 +48,9 @@ public class OrderPublisherService {
         long quantity1 = faker.random().nextInt(1, 10);
         double price2 = Double.parseDouble(this.faker.commerce().price());
         long quantity2 = faker.random().nextInt(1, 10);
+        String key = "Replenish" + id;
         Order order = new Order(
+                key,
                 "ReplenishmentOrder",
                 "Replenish " + productName1 + " and " + productName2,
                 price1 * quantity1 + price2 * quantity2,
@@ -63,6 +60,7 @@ public class OrderPublisherService {
         );
 
         log.info("sending order: " + order.title());
-        this.kafkaTemplate.send(this.topicName, order);
+        this.kafkaTemplate.send(this.topicName, key, order);
+        id++;
     }
 }

@@ -35,6 +35,7 @@ dependencies {
     implementation "com.github.javafaker:javafaker:1.0.2"
 
     implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation project(":Models")
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation platform('org.junit:junit-bom:5.9.1')
