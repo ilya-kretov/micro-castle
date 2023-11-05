@@ -4,11 +4,7 @@ import ilyxa.orders.model.Order;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -19,15 +15,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ActiveProfiles("test")
-//@SpringBootTest("spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration")
 class OrderPublisherServiceTest {
-//    @MockBean
-//    private KafkaTemplate<String, Object> template;
-
     @BeforeEach
     void setUp() {
     }
-
 
     @SuppressWarnings("unchecked")
     @Test
@@ -38,7 +29,7 @@ class OrderPublisherServiceTest {
         OrderPublisherService publisherService = new OrderPublisherService(template);
 
         publisherService.setKafkaTemplate(template);
-        publisherService.setTopicName("asdf");
+        publisherService.setTopicName("test-topic");
         when(template.send(any(String.class), any(String.class), any(Object.class))).thenReturn(new CompletableFuture<>());
         publisherService.generateOrder();
 
